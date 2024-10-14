@@ -2,7 +2,7 @@ import { Box, Skeleton } from '@mui/material';
 import Link from 'next/link';
 
 export interface Recipe {
-  id: number;
+  _id: string;
   name: string;
   image: string;
 }
@@ -15,12 +15,9 @@ interface RecipeCardProps {
 const RecipeCard: React.FC<RecipeCardProps> = ({
   recipe,
   loading,
-}: {
-  recipe: any;
-  loading: boolean;
-}) => {
+}: RecipeCardProps) => {
   return (
-    <Link href={`/recipes/${recipe.id}`} className="">
+    <Link href={`/recipes/${recipe._id}`} className="">
       <div className="text-center p-5 rounded-lg border border-slate-200">
         {loading ? (
           <>

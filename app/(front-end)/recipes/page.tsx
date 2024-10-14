@@ -1,35 +1,20 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import RecipeCard, { Recipe } from '../components/recipes/RecipeCard';
-import { Box, Grid2, Skeleton, Typography } from '@mui/material';
+import RecipeCard from '@/components/recipes/RecipeCard';
+import { RecipeType } from '@/lib/types/Recipe';
+import { Box, Skeleton } from '@mui/material';
+import { useEffect, useState } from 'react';
 
-interface RecipeApiResponse {
-  recipes: Recipe[];
-}
-
-const Page: React.FC = () => {
+function RecipesPage() {
   const [loading, setLoading] = useState<boolean>(false);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-
-  async function fetchRecipes(): Promise<void> {
-    try {
-      setLoading(true);
-      const apiResponse = await fetch('https://dummyjson.com/recipes');
-      const recipesData: RecipeApiResponse = await apiResponse.json();
-      // console.log(recipesData.recipes);
-
-      if (recipesData?.recipes) {
-        setRecipes(recipesData.recipes);
-      }
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [recipes, setRecipes] = useState<RecipeType[]>([]);
 
   useEffect(() => {
+    async function fetchRecipes() {
+      const res = await fetch('/api/recipes');
+      const data = await res.json();
+      setRecipes(data);
+    }
     fetchRecipes();
   }, []);
 
@@ -48,7 +33,7 @@ const Page: React.FC = () => {
                 </li>
               ))
             : recipes.map((recipe) => (
-                <li key={recipe.id}>
+                <li key={recipe._id}>
                   <RecipeCard recipe={recipe} loading={loading} />
                 </li>
               ))}
@@ -56,6 +41,6 @@ const Page: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Page;
+export default RecipesPage;
